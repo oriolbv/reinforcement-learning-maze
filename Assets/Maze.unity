@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f761c45b5ea604d96504cdec66fc66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnDuration: 0.01
+  turnDuration: 0.0001
   timeBetweenEpisodes: 0.1
   prefabWall: {fileID: 7810995550353095892, guid: b222bdcd088b3dccebaf582ee71bc542,
     type: 3}
