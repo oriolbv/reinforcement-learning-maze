@@ -136,6 +136,7 @@ public class Game: MonoBehaviour {
 		if(episode > 0) {
 			avgReward = globalReward/episode;
 		}
+        Debug.Log("episodeReward: " + episodeReward.ToString());
 
 		turn          = 0;
 		episodeReward = 0.0f;
