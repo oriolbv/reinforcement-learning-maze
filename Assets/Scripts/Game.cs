@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,9 +44,10 @@ public class Game: MonoBehaviour {
 
 	private Text textEpisode, textTurn, textAvgRwd, textReward;
 
+    private StreamWriter sr;
+    private FileInfo fInfo;
 
-
-	void Start () {
+    void Start () {
 
 		textEpisode = GameObject.Find ("TextEpisode")  .GetComponent<Text> ();
 		textTurn    = GameObject.Find ("TextTurn")     .GetComponent<Text> ();
@@ -57,8 +60,32 @@ public class Game: MonoBehaviour {
 		// Start the agent
 		StartAgent ();
 
-		// Start the training!
-		episode      = 0;
+        // Init CSV file
+        string path = "D://learning_curve.csv";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+        sr = File.CreateText(path);
+        // https://answers.unity.com/questions/1219055/exporting-data-to-excel.html
+        
+        string datosCSV = "valor1,valor2,valor3,valor4" + Environment.NewLine;
+        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
+        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
+        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
+        datosCSV += "valor1,valor2,valor3,valor4";
+
+        sr.WriteLine(datosCSV);
+
+        //Dejar como sólo de lectura
+        FileInfo fInfo = new FileInfo(path);
+        fInfo.IsReadOnly = true;
+
+        //Cerrar
+        sr.Close();
+
+        // Start the training!
+        episode = 0;
 		globalReward = 0.0f;
 		avgReward    = 0.0f;
 		StartEpisode();
