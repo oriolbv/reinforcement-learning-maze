@@ -44,8 +44,10 @@ public class Game: MonoBehaviour {
 
 	private Text textEpisode, textTurn, textAvgRwd, textReward;
 
+	private String filePath;
     private StreamWriter sr;
     private FileInfo fInfo;
+	private string data;
 
     void Start () {
 
@@ -61,29 +63,16 @@ public class Game: MonoBehaviour {
 		StartAgent ();
 
         // Init CSV file
-        string path = "D://learning_curve.csv";
-        if (File.Exists(path))
+        filePath = "C://Users/Oriol/Documents/learning_curve.csv";
+        if (File.Exists(filePath))
         {
-            File.Delete(path);
+            File.Delete(filePath);
         }
-        sr = File.CreateText(path);
+        sr = File.CreateText(filePath);
         // https://answers.unity.com/questions/1219055/exporting-data-to-excel.html
         
-        string datosCSV = "valor1,valor2,valor3,valor4" + Environment.NewLine;
-        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
-        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
-        datosCSV += "valor1,valor2,valor3,valor4" + Environment.NewLine;
-        datosCSV += "valor1,valor2,valor3,valor4";
-
-        sr.WriteLine(datosCSV);
-
-        //Dejar como sólo de lectura
-        FileInfo fInfo = new FileInfo(path);
-        fInfo.IsReadOnly = true;
-
-        //Cerrar
-        sr.Close();
-
+		data = "Episode,Reward,GlobalReward,AvgReward" + Environment.NewLine;
+		
         // Start the training!
         episode = 0;
 		globalReward = 0.0f;
@@ -164,6 +153,27 @@ public class Game: MonoBehaviour {
 			avgReward = globalReward/episode;
 		}
         Debug.Log("episodeReward: " + episodeReward.ToString());
+		data += episode.ToString() + "," + episodeReward.ToString() + "," + 
+				globalReward.ToString() + "," + avgReward.ToString() + Environment.NewLine;
+		
+
+		if (episode == 500) 
+		{
+			Debug.Log("Episode 500 reached!");
+			sr.WriteLine(data);
+
+			//Dejar como sólo de lectura
+			fInfo = new FileInfo(filePath);
+
+			//Cerrar
+			sr.Close();
+			Debug.Log("CSV file closed!");
+		}
+        
+
+
+
+
 
 		turn          = 0;
 		episodeReward = 0.0f;
