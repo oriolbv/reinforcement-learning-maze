@@ -1031,8 +1031,8 @@ MonoBehaviour:
   prefabBreakable: {fileID: 3481248653573602799, guid: 06a117ab92d6616849eabc59c4f5b9c2,
     type: 3}
   walkReward: -0.05
-  breakReward: -0.2
-  hitWallReward: -0.7
+  breakReward: 0.3
+  hitWallReward: -0.01
   hitLimitReward: -0.8
   goalReward: 10
-  episodeTurns: 100
+  episodeTurns: 400

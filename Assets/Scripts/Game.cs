@@ -201,7 +201,6 @@ public class Game: MonoBehaviour {
 
 		int newState     = ComputeState();
         bool episodeEnds = goalReached || turn >= episodeTurns;
-   
 
 
         agent.GetReward(newState, reward, episodeEnds);
@@ -280,12 +279,23 @@ public class Game: MonoBehaviour {
 				break;
 
 			case 3: 		// Goal reached
-                // TODO: Si hi han breakables no goal reached.
-				turnReward += goalReward;
-				agentRow    = destRow;
-				agentCol    = destCol;
-				goalReached = true;
-				break;
+                // Get breakables
+                string br = GetBreakables();
+                // If all the breakables have been broken...
+                if (br == "11111")
+                {
+                    turnReward += goalReward;
+                    agentRow = destRow;
+                    agentCol = destCol;
+                    goalReached = true;
+                }
+                else
+                {
+                    agentRow = destRow;
+                    agentCol = destCol;
+                    turnReward += walkReward;
+                }
+                break;
 		}
 
 
@@ -304,7 +314,22 @@ public class Game: MonoBehaviour {
 				if(board_int[i, j] == 1) {
 				 	breakables += board_go[i, j].activeSelf? "0" : "1";
 			}
+    
 	}
+
+    private string GetBreakables()
+    {
+        breakables = "";
+
+        for (int i = 0; i < ROWS; i++)
+            for (int j = 0; j < COLS; j++)
+                if (board_int[i, j] == 1)
+                {
+                    breakables += board_go[i, j].activeSelf ? "0" : "1";
+                }
+
+        return breakables;
+    }
 
 	// Transforms the state of the game (blocks destroyed, player position) into an integer
 	// that will be the row number of the agent's Q table
