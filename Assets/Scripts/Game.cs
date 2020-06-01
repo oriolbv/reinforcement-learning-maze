@@ -69,7 +69,6 @@ public class Game: MonoBehaviour {
             File.Delete(filePath);
         }
         sr = File.CreateText(filePath);
-        // https://answers.unity.com/questions/1219055/exporting-data-to-excel.html
         
 		data = "Episode,Reward,GlobalReward,AvgReward" + Environment.NewLine;
 		
