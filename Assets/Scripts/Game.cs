@@ -63,7 +63,7 @@ public class Game: MonoBehaviour {
 		StartAgent ();
 
         // Init CSV file
-        filePath = "C://Users/Oriol/Documents/learning_curve.csv";
+        filePath = "C://Users/oriol/Documents/learning_curve.csv";
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
@@ -93,7 +93,7 @@ public class Game: MonoBehaviour {
 			{0, 0, 0, 2, 1, 2, 2, 2},
 			{0, 2, 2, 2, 0, 0, 0, 0},
 			{0, 0, 0, 2, 0, 0, 2, 0},
-			{0, 2, 0, 0, 0, 0, 2, 3}
+			{0, 2, 0, 1, 0, 0, 2, 3}
 		};
 
 
@@ -153,8 +153,9 @@ public class Game: MonoBehaviour {
 			avgReward = globalReward/episode;
 		}
         Debug.Log("episodeReward: " + episodeReward.ToString());
-		data += episode.ToString() + "," + episodeReward.ToString() + "," + 
-				globalReward.ToString() + "," + avgReward.ToString() + Environment.NewLine;
+		// Converted to integer in order to avoid problems with E
+        data += episode.ToString() + "," + ((int)episodeReward).ToString() + "," + 
+				((int)globalReward).ToString() + "," + ((int)avgReward).ToString() + Environment.NewLine;
 		
 
 		if (episode == 500) 
@@ -162,18 +163,13 @@ public class Game: MonoBehaviour {
 			Debug.Log("Episode 500 reached!");
 			sr.WriteLine(data);
 
-			//Dejar como sólo de lectura
+	        // Used for additional flags. We will not use this right now
 			fInfo = new FileInfo(filePath);
 
-			//Cerrar
+			// Close file
 			sr.Close();
 			Debug.Log("CSV file closed!");
 		}
-        
-
-
-
-
 
 		turn          = 0;
 		episodeReward = 0.0f;
@@ -204,9 +200,11 @@ public class Game: MonoBehaviour {
 		turn++;
 
 		int newState     = ComputeState();
-		bool episodeEnds = goalReached || turn >= episodeTurns;
+        bool episodeEnds = goalReached || turn >= episodeTurns;
+   
 
-		agent.GetReward(newState, reward, episodeEnds);
+
+        agent.GetReward(newState, reward, episodeEnds);
 
 		// 4) If the episode ends then start a new one
 		if (episodeEnds)
@@ -282,6 +280,7 @@ public class Game: MonoBehaviour {
 				break;
 
 			case 3: 		// Goal reached
+                // TODO: Si hi han breakables no goal reached.
 				turnReward += goalReward;
 				agentRow    = destRow;
 				agentCol    = destCol;
