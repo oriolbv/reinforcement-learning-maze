@@ -278,22 +278,10 @@ public class Game: MonoBehaviour {
 				break;
 
 			case 3: 		// Goal reached
-                // Get breakables
-                string br = GetBreakables();
-                // If all the breakables have been broken...
-                if (br == "11111")
-                {
-                    turnReward += goalReward;
-                    agentRow = destRow;
-                    agentCol = destCol;
-                    goalReached = true;
-                }
-                else
-                {
-                    agentRow = destRow;
-                    agentCol = destCol;
-                    turnReward += walkReward;
-                }
+				turnReward += goalReward;
+				agentRow = destRow;
+				agentCol = destCol;
+				goalReached = true;
                 break;
 		}
 
