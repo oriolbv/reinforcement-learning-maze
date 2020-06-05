@@ -44,14 +44,29 @@ public class Game: MonoBehaviour {
 
 	private Text textEpisode, textTurn, textAvgRwd, textReward;
 
+    // CSV file
 	private String filePath;
     private StreamWriter sr;
     private FileInfo fInfo;
 	private string data;
 
+    // Output file (Activity5)
+    private String output_filename;
+    private StreamWriter sr_output;
+
     void Start () {
 
-		textEpisode = GameObject.Find ("TextEpisode")  .GetComponent<Text> ();
+        // Output file
+        output_filename = "C://Users/oriol/Documents/output_directions.txt";
+        if (File.Exists(output_filename))
+        {
+            Debug.Log(output_filename + " already exists.");
+            File.Delete(output_filename);
+        }
+        sr_output = File.CreateText(output_filename);
+
+
+        textEpisode = GameObject.Find ("TextEpisode")  .GetComponent<Text> ();
 		textTurn    = GameObject.Find ("TextTurn")     .GetComponent<Text> ();
 		textAvgRwd  = GameObject.Find ("TextAvgReward").GetComponent<Text> ();
 		textReward  = GameObject.Find ("TextReward")   .GetComponent<Text> ();
@@ -71,7 +86,8 @@ public class Game: MonoBehaviour {
         sr = File.CreateText(filePath);
         
 		data = "Episode,Reward,GlobalReward,AvgReward" + Environment.NewLine;
-		
+
+        
         // Start the training!
         episode = 0;
 		globalReward = 0.0f;
@@ -124,7 +140,10 @@ public class Game: MonoBehaviour {
 	// Starts a new game (episode)
 	void StartEpisode() {
 
-		timeThisTurn = -timeBetweenEpisodes;
+        sr_output.WriteLine("Episode {0}", episode);
+        sr_output.WriteLine("========================");
+
+        timeThisTurn = -timeBetweenEpisodes;
 
 
 		// Reactivate broken blocks
@@ -151,13 +170,12 @@ public class Game: MonoBehaviour {
 		if(episode > 0) {
 			avgReward = globalReward/episode;
 		}
-        Debug.Log("episodeReward: " + episodeReward.ToString());
+
 		// Converted to integer in order to avoid problems with E
         data += episode.ToString() + "," + ((int)episodeReward).ToString() + "," + 
 				((int)globalReward).ToString() + "," + ((int)avgReward).ToString() + Environment.NewLine;
-		
 
-		if (episode == 500) 
+        if (episode == 300) 
 		{
 			Debug.Log("Episode 500 reached!");
 			sr.WriteLine(data);
@@ -168,7 +186,9 @@ public class Game: MonoBehaviour {
 			// Close file
 			sr.Close();
 			Debug.Log("CSV file closed!");
-		}
+            sr_output.Close();
+            Debug.Log("Output file closed!");
+        }
 
 		turn          = 0;
 		episodeReward = 0.0f;
@@ -226,20 +246,28 @@ public class Game: MonoBehaviour {
 
 		switch(action) {
 			case 0:      
-				destCol++;  // Right  
-				break;
+				destCol++;  // Right 
+                Debug.Log("["+ agentRow + "]["+agentCol+"] : Right");
+                sr_output.WriteLine("[{0}][{1}] : Right", agentRow, agentCol);
+                break;
 
 			case 1:
 				destRow++;  // Up
-				break;
+                Debug.Log("[" + agentRow + "][" + agentCol + "] : Up");
+                sr_output.WriteLine("[{0}][{1}] : Up", agentRow, agentCol);
+                break;
 
 			case 2:
 				destCol--;  // Left
-				break;
+                Debug.Log("[" + agentRow + "][" + agentCol + "] : Left");
+                sr_output.WriteLine("[{0}][{1}] : Left", agentRow, agentCol);
+                break;
 
 			case 3:
 				destRow--;  // Down
-				break;
+                Debug.Log("[" + agentRow + "][" + agentCol + "] : Down");
+                sr_output.WriteLine("[{0}][{1}] : Down", agentRow, agentCol);
+                break;
 		}
 
 		// 2) Discard out-of-limits attempts; do not move and end action
@@ -301,7 +329,10 @@ public class Game: MonoBehaviour {
 				if(board_int[i, j] == 1) {
 				 	breakables += board_go[i, j].activeSelf? "0" : "1";
 			}
-    
+        if (breakables == "")
+        {
+            breakables = "0";
+        }
 	}
 
     private string GetBreakables()
